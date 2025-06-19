@@ -60,7 +60,7 @@
             </div>
 
             {% if product.stock > 0 %}
-            <form method="post" action="{% url 'store:cart_add' product.id %}" class="mb-4">
+            <form method="post" action="{% url 'store:add_to_cart' product.id %}" class="mb-4">
                 {% csrf_token %}
                 <div class="d-flex align-items-center">
                     <div class="input-group me-3" style="width: 150px;">

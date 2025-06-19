@@ -1,5 +1,9 @@
 from PIL import Image, ImageDraw, ImageFont
 import os
+from store.models import Product
+from django.conf import settings
+
+MEDIA_PATH = os.path.join(settings.BASE_DIR, 'media', 'products')
 
 def create_part_image(filename, text, color):
     # Создаем изображение
@@ -41,4 +45,18 @@ parts = [
 
 for filename, text, color in parts:
     create_part_image(filename, text, color)
-    print(f'Создано изображение: {filename}') 
+    print(f'Создано изображение: {filename}')
+
+count = 0
+for product in Product.objects.all():
+    slug = product.slug
+    for ext in ['jpg', 'jpeg', 'png']:
+        filename = f"{slug}.{ext}"
+        filepath = os.path.join(MEDIA_PATH, filename)
+        if os.path.exists(filepath):
+            product.image = f"products/{filename}"
+            product.save()
+            print(f"Картинка для {product.name} установлена: {filename}")
+            count += 1
+            break
+print(f"Всего обновлено товаров: {count}") 

@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db.models import Q
 from .models import Category, Product, Cart, CartItem, Order, OrderItem
-from .forms import UserRegistrationForm, OrderForm
+from .forms import UserRegistrationForm, OrderForm, UserProfileForm
 from django.contrib.auth import login
 
 def home(request):
@@ -52,7 +52,7 @@ def product_list(request, category_slug=None):
         'category': category,
     })
 
-def product_detail(request, product_id):
+def product_detail(request, product_id, product_slug=None):
     product = get_object_or_404(Product, id=product_id)
     related_products = Product.objects.filter(category=product.category).exclude(id=product_id)[:4]
     return render(request, 'store/product_detail.html', {
