@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Профиль - CarStore{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h3 class="card-title">Личные данные</h3>
+                    <form method="post">
+                        {% csrf_token %}
+                        {{ form|crispy }}
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">Сохранить изменения</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Изменить пароль</h5>
+                    <form method="post" action="{% url 'password_change' %}">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="old_password" class="form-label">Текущий пароль</label>
+                            <input type="password" class="form-control" id="old_password" name="old_password" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="new_password1" class="form-label">Новый пароль</label>
+                            <input type="password" class="form-control" id="new_password1" name="new_password1" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="new_password2" class="form-label">Подтвердите новый пароль</label>
+                            <input type="password" class="form-control" id="new_password2" name="new_password2" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Изменить пароль</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body">
+                    <h3 class="card-title">История заказов</h3>
+                    {% if orders %}
+                        {% for order in orders %}
+                            <div class="card mb-3">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <h5 class="card-title mb-0">Заказ #{{ order.id }}</h5>
+                                        <span class="badge {% if order.status == 'completed' %}bg-success{% elif order.status == 'processing' %}bg-warning{% else %}bg-secondary{% endif %}">
+                                            {{ order.get_status_display }}
+                                        </span>
+                                    </div>
+                                    <p class="card-text">
+                                        <strong>Дата:</strong> {{ order.created_at|date:"d.m.Y H:i" }}<br>
+                                        <strong>Сумма:</strong> {{ order.total_price }} ₽<br>
+                                        <strong>Адрес доставки:</strong> {{ order.shipping_address }}
+                                    </p>
+                                    <div class="table-responsive">
+                                        <table class="table table-sm">
+                                            <thead>
+                                                <tr>
+                                                    <th>Товар</th>
+                                                    <th>Количество</th>
+                                                    <th>Цена</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for item in order.items.all %}
+                                                    <tr>
+                                                        <td>{{ item.product.name }}</td>
+                                                        <td>{{ item.quantity }}</td>
+                                                        <td>{{ item.price }} ₽</td>
+                                                    </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <p class="text-center">У вас пока нет заказов</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

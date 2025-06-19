@@ -1,0 +1,32 @@
+/* Общие стили */
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+footer {
+    margin-top: auto;
+}
+
+/* Стили для карточек товаров */
+.card-img-top {
+    height: 200px;
+    object-fit: cover;
+}
+
+/* Стили для цен */
+.text-decoration-line-through {
+    color: #6c757d;
+}
+
+/* Стили для кнопок */
+.btn-primary {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+}
+
+.btn-primary:hover {
+    background-color: #0b5ed7;
+    border-color: #0a58ca;
+} 

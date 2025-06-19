@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    {% if category %}{{ category.name }}{% else %}Все товары{% endif %} - CarStore
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-4">Каталог товаров</h1>
+    
+    <div class="row">
+        <div class="col-md-3">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Категории</h5>
+                </div>
+                <div class="list-group list-group-flush">
+                    <a href="{% url 'store:product_list' %}" class="list-group-item list-group-item-action {% if not category %}active{% endif %}">
+                        Все товары
+                    </a>
+                    {% for c in categories %}
+                    <a href="{{ c.get_absolute_url }}" class="list-group-item list-group-item-action {% if category.slug == c.slug %}active{% endif %}">
+                        {{ c.name }}
+                    </a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-9">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="h2">
+                    {% if category %}
+                        {{ category.name }}
+                    {% else %}
+                        Все товары
+                    {% endif %}
+                </h1>
+                <form class="d-flex" method="get">
+                    <input class="form-control me-2" type="search" name="search" 
+                           placeholder="Поиск товаров" value="{{ search_query }}">
+                    <button class="btn btn-primary" type="submit">Поиск</button>
+                </form>
+            </div>
+
+            {% if products %}
+            <div class="row">
+                {% for product in products %}
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100">
+                        {% if product.image %}
+                        <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}">
+                        {% else %}
+                        <img src="{% static 'images/no-image.jpg' %}" class="card-img-top" alt="Нет изображения">
+                        {% endif %}
+                        <div class="card-body">
+                            <h5 class="card-title">{{ product.name }}</h5>
+                            <p class="card-text">{{ product.description|truncatewords:20 }}</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    {% if product.discount %}
+                                    <span class="discount-badge">-{{ product.discount }}%</span>
+                                    <span class="text-decoration-line-through text-muted ms-2">{{ product.price }} ₽</span>
+                                    {% endif %}
+                                    <span class="h5 mb-0">{{ product.discounted_price }} ₽</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="alert alert-info">
+                Товары не найдены
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %} 

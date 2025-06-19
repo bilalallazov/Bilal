@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block title %}Заказ оформлен - CarStore{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body text-center">
+                    <div class="mb-4">
+                        <i class="bi bi-check-circle-fill text-success" style="font-size: 4rem;"></i>
+                    </div>
+                    <h2 class="card-title mb-4">Заказ успешно оформлен!</h2>
+                    <p class="card-text mb-4">
+                        Спасибо за ваш заказ! Номер вашего заказа: <strong>#{{ order.id }}</strong>
+                    </p>
+                    <p class="card-text mb-4">
+                        Мы отправили подтверждение на ваш email: <strong>{{ order.user.email }}</strong>
+                    </p>
+                    <div class="mb-4">
+                        <h5>Детали заказа:</h5>
+                        <p class="mb-1">Адрес доставки: {{ order.shipping_address }}</p>
+                        <p class="mb-1">Телефон: {{ order.phone }}</p>
+                        <p class="mb-1">Сумма заказа: {{ order.total_price }} ₽</p>
+                    </div>
+                    <div class="d-grid gap-2">
+                        <a href="{% url 'profile' %}" class="btn btn-primary">Перейти в профиль</a>
+                        <a href="{% url 'product_list' %}" class="btn btn-outline-primary">Продолжить покупки</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

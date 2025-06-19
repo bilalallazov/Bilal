@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}CarStore - Best Car Seller{% endblock %}
+
+{% block content %}
+<div class="container-fluid bg-dark text-light p-0" style="min-height:100vh;">
+    <!-- Header Banner -->
+    <div class="jumbotron jumbotron-fluid bg-black text-center py-5 mb-0" style="background: #1a1a1a;">
+        <div class="container">
+            <h1 class="display-4 font-weight-bold" style="color:#ff4c4c;">New <span style="color:#fff;">Accessories</span></h1>
+            <p class="lead">Get All Accessories 25% Off Now</p>
+            <p class="mb-4">Лучшие запчасти и аксессуары для вашего авто. Качество, проверенное временем!</p>
+            <a href="{% url 'store:product_list' %}" class="btn btn-danger btn-lg">Смотреть каталог</a>
+        </div>
+    </div>
+
+    <!-- Categories Section -->
+    <section class="container py-5">
+        <h2 class="text-center mb-4">Категории товаров</h2>
+        <div class="row justify-content-center">
+            {% for category in categories %}
+            <div class="col-6 col-md-3 mb-4">
+                <div class="category-card-simple w-100 text-center">
+                    {% if category.image %}
+                    <img src="{{ category.image.url }}" class="img-fluid mb-2" style="max-height:90px; object-fit:contain;" alt="{{ category.name }}">
+                    {% endif %}
+                    <h5 class="mb-2" style="font-weight:bold;">{{ category.name }}</h5>
+                    <a href="{% url 'store:product_list' %}?category={{ category.id }}" class="btn btn-outline-dark btn-sm">Смотреть</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+    <style>
+    .category-card-simple {
+        background: #e9ecef;
+        color: #232323;
+        border-radius: 1rem;
+        box-shadow: 0 2px 8px 0 rgba(0,0,0,0.06);
+        border: none;
+        padding: 1.2rem 0.5rem 1rem 0.5rem;
+        transition: transform 0.15s, box-shadow 0.15s;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 180px;
+    }
+    .category-card-simple:hover {
+        transform: scale(1.03) translateY(-2px);
+        box-shadow: 0 4px 16px 0 rgba(44,44,44,0.10);
+    }
+    </style>
+
+    <!-- Featured Products Section -->
+    <section class="container pb-5">
+        <h2 class="text-center mb-4">Our Products</h2>
+        <div class="row justify-content-center">
+            {% for product in featured_products %}
+            <div class="col-6 col-md-3 mb-4">
+                <div class="card bg-dark text-light h-100 border-0 shadow-sm">
+                    {% if product.image %}
+                    <img src="{{ product.image.url }}" class="card-img-top p-2" alt="{{ product.name }}">
+                    {% endif %}
+                    <div class="card-body text-center">
+                        <h5 class="card-title">{{ product.name }}</h5>
+                        <p class="card-text mb-2">
+                            {% if product.discount %}
+                            <span class="text-decoration-line-through text-muted">{{ product.price }} ₽</span>
+                            <span class="text-danger font-weight-bold">{{ product.discounted_price }} ₽</span>
+                            {% else %}
+                            <span class="text-light">{{ product.price }} ₽</span>
+                            {% endif %}
+                        </p>
+                        {% if product.slug %}
+                            <a href="{% url 'store:product_detail' product.id product.slug %}" class="btn btn-outline-danger btn-sm">Подробнее</a>
+                        {% else %}
+                            <span class="text-danger">Нет ссылки (нет слага)</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12">
+                <p class="text-center">Товары пока не добавлены</p>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="text-center mt-4">
+            <a href="{% url 'store:product_list' %}" class="btn btn-danger btn-lg">View More Products</a>
+        </div>
+    </section>
+
+    <!-- Promo Section -->
+    <section class="container-fluid bg-secondary text-center py-5">
+        <h3 class="mb-3">25% OFF</h3>
+        <p class="mb-0">ON ORDER OVER $999</p>
+    </section>
+</div>
+{% endblock %} 

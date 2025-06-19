@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+
+{% block title %}CarStore - Главная{% endblock %}
+
+{% block content %}
+<section class="hero-section text-center">
+    <div class="container">
+        <h1 class="display-4 mb-4">Добро пожаловать в CarStore</h1>
+        <p class="lead mb-4">Ваш надежный партнер в мире автозапчастей</p>
+        <a href="{% url 'store:product_list' %}" class="btn btn-primary btn-lg">Перейти в каталог</a>
+    </div>
+</section>
+
+<section class="categories mb-5">
+    <div class="container">
+        <h2 class="text-center mb-4">Популярные категории</h2>
+        <div class="row">
+            {% for category in categories %}
+            <div class="col-md-4 mb-4">
+                <a href="{{ category.get_absolute_url }}" class="category-card">
+                    <h3>{{ category.name }}</h3>
+                    <p>{{ category.products.count }} товаров</p>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<section class="featured-products mb-5">
+    <div class="container">
+        <h2 class="text-center mb-4">Популярные товары</h2>
+        <div class="row">
+            {% for product in featured_products %}
+            <div class="col-md-3 mb-4">
+                <div class="card h-100">
+                    {% if product.image %}
+                    <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}">
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ product.name }}</h5>
+                        <p class="card-text">{{ product.description|truncatewords:20 }}</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                {% if product.discount %}
+                                <span class="discount-badge">-{{ product.discount }}%</span>
+                                <span class="text-decoration-line-through text-muted ms-2">{{ product.price }} ₽</span>
+                                {% endif %}
+                                <span class="h5 mb-0">{{ product.discounted_price }} ₽</span>
+                            </div>
+                            <a href="{% url 'store:product_detail' product.id product.slug %}" class="btn btn-primary">Подробнее</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<section class="advantages mb-5">
+    <div class="container">
+        <div class="row text-center">
+            <div class="col-md-4 mb-4">
+                <div class="p-4">
+                    <i class="fas fa-truck fa-3x mb-3 text-primary"></i>
+                    <h3>Быстрая доставка</h3>
+                    <p>Доставляем по всей России</p>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="p-4">
+                    <i class="fas fa-shield-alt fa-3x mb-3 text-primary"></i>
+                    <h3>Гарантия качества</h3>
+                    <p>Только оригинальные запчасти</p>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="p-4">
+                    <i class="fas fa-headset fa-3x mb-3 text-primary"></i>
+                    <h3>Поддержка 24/7</h3>
+                    <p>Всегда на связи</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %} 
