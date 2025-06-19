@@ -1,6 +1,6 @@
+python==3.11.9
 Django==5.0.2
 gunicorn
 dj-database-url
 whitenoise
 Pillow==10.2.0
-python=3.11.9
