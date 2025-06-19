@@ -1,3 +1,4 @@
+from .version import __version__
 import os
 from pathlib import Path
 import dj_database_url
