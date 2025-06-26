@@ -24,17 +24,4 @@ class Command(BaseCommand):
         if updated == 0:
             self.stdout.write(self.style.WARNING('Все товары уже имеют slug!'))
         else:
-            self.stdout.write(self.style.SUCCESS(f'Обновлено товаров: {updated}'))
-
-# Добавим скрипт для массовой замены картинки у товара по имени
-def set_image_for_product(product_name, image_filename):
-    product = Product.objects.filter(name__icontains=product_name).first()
-    if product:
-        product.image = f'картинки/{image_filename}'
-        product.save()
-        print(f'Картинка для "{product.name}" изменена на {image_filename}')
-    else:
-        print(f'Товар с именем "{product_name}" не найден!')
-
-if __name__ == "__main__":
-    set_image_for_product('Воздушный фильтр', 'аккумулятор.webp') 
+            self.stdout.write(self.style.SUCCESS(f'Обновлено товаров: {updated}')) 

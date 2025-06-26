@@ -6,7 +6,7 @@
 <div class="container">
     <h2 class="mb-4">Корзина</h2>
     
-    {% if cart.items %}
+    {% if cart.items.exists %}
         <div class="row">
             <div class="col-md-8">
                 <div class="card">
@@ -23,7 +23,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {% for item in cart.items %}
+                                    {% for item in cart.items.all %}
                                         <tr>
                                             <td>
                                                 <div class="d-flex align-items-center">
@@ -39,7 +39,7 @@
                                             </td>
                                             <td>{{ item.product.price }} ₽</td>
                                             <td>
-                                                <form method="post" action="{% url 'store:update_cart' item.product.id %}" class="d-flex align-items-center">
+                                                <form method="post" action="{% url 'update_cart' item.id %}" class="d-flex align-items-center">
                                                     {% csrf_token %}
                                                     <input type="number" name="quantity" value="{{ item.quantity }}" 
                                                            min="1" max="99" class="form-control form-control-sm" 
@@ -48,7 +48,7 @@
                                             </td>
                                             <td>{{ item.total_price }} ₽</td>
                                             <td>
-                                                <form method="post" action="{% url 'store:remove_from_cart' item.product.id %}">
+                                                <form method="post" action="{% url 'remove_from_cart' item.id %}">
                                                     {% csrf_token %}
                                                     <button type="submit" class="btn btn-sm btn-outline-danger">
                                                         <i class="bi bi-trash"></i>
@@ -68,7 +68,7 @@
                     <div class="card-body">
                         <h5 class="card-title">Итого</h5>
                         <div class="d-flex justify-content-between mb-3">
-                            <span>Товары ({{ cart.items|length }}):</span>
+                            <span>Товары ({{ cart.items.count }}):</span>
                             <span>{{ cart.total_price }} ₽</span>
                         </div>
                         <div class="d-flex justify-content-between mb-3">
@@ -80,7 +80,7 @@
                             <strong>Итого к оплате:</strong>
                             <strong>{{ cart.total_price }} ₽</strong>
                         </div>
-                        <a href="{% url 'store:checkout' %}" class="btn btn-primary w-100">Оформить заказ</a>
+                        <a href="{% url 'checkout' %}" class="btn btn-primary w-100">Оформить заказ</a>
                     </div>
                 </div>
             </div>
@@ -89,7 +89,7 @@
         <div class="text-center py-5">
             <h4 class="mb-4">Ваша корзина пуста</h4>
             <p class="text-muted mb-4">Добавьте товары в корзину, чтобы оформить заказ</p>
-            <a href="{% url 'store:product_list' %}" class="btn btn-primary">Перейти в каталог</a>
+            <a href="{% url 'product_list' %}" class="btn btn-primary">Перейти в каталог</a>
         </div>
     {% endif %}
 </div>

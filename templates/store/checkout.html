@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load crispy_forms_tags %}
 
 {% block title %}Оформление заказа - CarStore{% endblock %}
 
@@ -13,7 +14,7 @@
                     <h5 class="card-title mb-4">Данные для доставки</h5>
                     <form method="post">
                         {% csrf_token %}
-                        {{ form.as_p }}
+                        {{ form|crispy }}
                         <div class="d-grid gap-2 mt-4">
                             <button type="submit" class="btn btn-primary">Подтвердить заказ</button>
                         </div>

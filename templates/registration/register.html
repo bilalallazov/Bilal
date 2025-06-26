@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load crispy_forms_tags %}
 
 {% block title %}Регистрация - CarStore{% endblock %}
 
@@ -11,7 +12,7 @@
                     <h2 class="text-center mb-4">Регистрация</h2>
                     <form method="post">
                         {% csrf_token %}
-                        {{ form.as_p }}
+                        {{ form|crispy }}
                         <div class="d-grid gap-2">
                             <button type="submit" class="btn btn-primary">Зарегистрироваться</button>
                         </div>

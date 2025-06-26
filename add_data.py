@@ -23,8 +23,7 @@ Product.objects.create(
     description='Высококачественный масляный фильтр для всех типов двигателей',
     price=450,
     stock=100,
-    available=True,
-    image='картинки/масляной фильтр.webp'
+    available=True
 )
 
 Product.objects.create(
@@ -34,8 +33,7 @@ Product.objects.create(
     description='Воздушный фильтр с увеличенным ресурсом',
     price=800,
     stock=50,
-    available=True,
-    image='картинки/mann.webp'
+    available=True
 )
 
 Product.objects.create(
@@ -45,8 +43,7 @@ Product.objects.create(
     description='Передние тормозные колодки с высоким коэффициентом трения',
     price=2500,
     stock=30,
-    available=True,
-    image='картинки/тормозные коллодки.webp'
+    available=True
 )
 
 Product.objects.create(
@@ -56,8 +53,7 @@ Product.objects.create(
     description='Вентилируемый тормозной диск с защитным покрытием',
     price=3500,
     stock=20,
-    available=True,
-    image='картинки/тормрзные диски .webp'
+    available=True
 )
 
 Product.objects.create(
@@ -67,8 +63,7 @@ Product.objects.create(
     description='Газонаполненный амортизатор для комфортной езды',
     price=4000,
     stock=15,
-    available=True,
-    image='картинки/амартизаторы.webp'
+    available=True
 )
 
 Product.objects.create(
@@ -78,8 +73,7 @@ Product.objects.create(
     description='Пружина подвески с увеличенным ресурсом',
     price=2800,
     stock=25,
-    available=True,
-    image='картинки/пружина подвески.webp'
+    available=True
 )
 
 Product.objects.create(
@@ -89,8 +83,7 @@ Product.objects.create(
     description='Передний бампер из ударопрочного пластика',
     price=12000,
     stock=10,
-    available=True,
-    image='картинки/Бампер.webp'
+    available=True
 )
 
 Product.objects.create(
@@ -100,8 +93,7 @@ Product.objects.create(
     description='LED фара головного света с дневными ходовыми огнями',
     price=15000,
     stock=8,
-    available=True,
-    image='картинки/фары.webp'
+    available=True
 )
 
 Product.objects.create(
@@ -111,8 +103,7 @@ Product.objects.create(
     description='Аккумулятор с увеличенным сроком службы',
     price=8000,
     stock=20,
-    available=True,
-    image='картинки/аккумулятор.webp'
+    available=True
 )
 
 Product.objects.create(
@@ -122,6 +113,5 @@ Product.objects.create(
     description='Генератор с повышенной мощностью',
     price=25000,
     stock=5,
-    available=True,
-    image='картинки/генератор.webp'
+    available=True
 ) 
