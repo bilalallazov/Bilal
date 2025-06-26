@@ -48,7 +48,7 @@
             <div class="row">
                 {% for product in products %}
                 <div class="col-md-4 mb-4">
-                    <div class="card h-100">
+                    <div class="card h-100 product-card" data-product-id="{{ product.id }}" style="cursor:pointer;">
                         {% if product.image %}
                         <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}">
                         {% else %}
@@ -85,4 +85,46 @@
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    document.querySelectorAll('.product-card').forEach(function(card) {
+        card.addEventListener('click', function(e) {
+            // Не срабатывает если клик по ссылке
+            if (e.target.tagName === 'A') return;
+            const productId = card.getAttribute('data-product-id');
+            fetch(`/cart/add/${productId}/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': getCookie('csrftoken'),
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: 'quantity=1'
+            }).then(res => {
+                if (res.ok) {
+                    alert('Товар добавлен в корзину!');
+                } else {
+                    alert('Ошибка при добавлении в корзину');
+                }
+            });
+        });
+    });
+});
+</script>
 {% endblock %} 

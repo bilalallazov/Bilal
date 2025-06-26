@@ -25,19 +25,19 @@ class Command(BaseCommand):
         products = [
             {
                 'category': categories['engine'],
-                'name': 'Масляный фильтр Bosch',
-                'description': 'Высококачественный масляный фильтр для всех типов двигателей',
+                'name': 'Маслянной фильтр',
+                'description': 'Высококачественный маслянной фильтр для всех типов двигателей',
                 'price': 450,
                 'stock': 100,
-                'image': 'картинки/oil_filter.jpg'
+                'image': 'картинки/масляной фильтр.webp'
             },
             {
                 'category': categories['engine'],
-                'name': 'Воздушный фильтр Mann',
+                'name': 'Воздушный фильтр',
                 'description': 'Воздушный фильтр с увеличенным ресурсом',
                 'price': 800,
                 'stock': 50,
-                'image': 'картинки/air_filter.jpg'
+                'image': 'картинки/mann.webp'
             },
             {
                 'category': categories['brake'],
@@ -45,7 +45,7 @@ class Command(BaseCommand):
                 'description': 'Передние тормозные колодки с высоким коэффициентом трения',
                 'price': 2500,
                 'stock': 30,
-                'image': 'картинки/brake_pads.jpg'
+                'image': 'картинки/тормозные коллодки.webp'
             },
             {
                 'category': categories['brake'],
@@ -53,7 +53,7 @@ class Command(BaseCommand):
                 'description': 'Вентилируемый тормозной диск с защитным покрытием',
                 'price': 3500,
                 'stock': 20,
-                'image': 'картинки/brake_disc.jpg'
+                'image': 'картинки/тормрзные диски .webp'
             },
             {
                 'category': categories['suspension'],
@@ -61,7 +61,7 @@ class Command(BaseCommand):
                 'description': 'Газонаполненный амортизатор для комфортной езды',
                 'price': 4000,
                 'stock': 15,
-                'image': 'картинки/shock_absorber.jpg'
+                'image': 'картинки/амартизаторы.webp'
             },
             {
                 'category': categories['suspension'],
@@ -69,7 +69,7 @@ class Command(BaseCommand):
                 'description': 'Пружина подвески с увеличенным ресурсом',
                 'price': 2800,
                 'stock': 25,
-                'image': 'картинки/spring.jpg'
+                'image': 'картинки/пружина подвески.webp'
             },
             {
                 'category': categories['body'],
@@ -77,7 +77,7 @@ class Command(BaseCommand):
                 'description': 'Передний бампер из ударопрочного пластика',
                 'price': 12000,
                 'stock': 10,
-                'image': 'картинки/bumper.jpg'
+                'image': 'картинки/Бампер.webp'
             },
             {
                 'category': categories['body'],
@@ -85,7 +85,7 @@ class Command(BaseCommand):
                 'description': 'LED фара головного света с дневными ходовыми огнями',
                 'price': 15000,
                 'stock': 8,
-                'image': 'картинки/headlight.jpg'
+                'image': 'картинки/фары.webp'
             },
             {
                 'category': categories['electrical'],
@@ -93,7 +93,7 @@ class Command(BaseCommand):
                 'description': 'Аккумулятор с увеличенным сроком службы',
                 'price': 8000,
                 'stock': 20,
-                'image': 'картинки/battery.jpg'
+                'image': 'картинки/аккумулятор.webp'
             },
             {
                 'category': categories['electrical'],
@@ -101,30 +101,30 @@ class Command(BaseCommand):
                 'description': 'Генератор с повышенной мощностью',
                 'price': 25000,
                 'stock': 5,
-                'image': 'картинки/generator.jpg'
+                'image': 'картинки/генератор.webp'
             }
         ]
 
         # Создаем тестовые изображения
-        test_images = {
-            'oil_filter.jpg': 'https://example.com/oil_filter.jpg',
-            'air_filter.jpg': 'https://example.com/air_filter.jpg',
-            'brake_pads.jpg': 'https://example.com/brake_pads.jpg',
-            'brake_disc.jpg': 'https://example.com/brake_disc.jpg',
-            'shock_absorber.jpg': 'https://example.com/shock_absorber.jpg',
-            'spring.jpg': 'https://example.com/spring.jpg',
-            'bumper.jpg': 'https://example.com/bumper.jpg',
-            'headlight.jpg': 'https://example.com/headlight.jpg',
-            'battery.jpg': 'https://example.com/battery.jpg',
-            'generator.jpg': 'https://example.com/generator.jpg'
-        }
+        # test_images = {
+        #     'oil_filter.jpg': 'https://example.com/oil_filter.jpg',
+        #     'air_filter.jpg': 'https://example.com/air_filter.jpg',
+        #     'brake_pads.jpg': 'https://example.com/brake_pads.jpg',
+        #     'brake_disc.jpg': 'https://example.com/brake_disc.jpg',
+        #     'shock_absorber.jpg': 'https://example.com/shock_absorber.jpg',
+        #     'spring.jpg': 'https://example.com/spring.jpg',
+        #     'bumper.jpg': 'https://example.com/bumper.jpg',
+        #     'headlight.jpg': 'https://example.com/headlight.jpg',
+        #     'battery.jpg': 'https://example.com/battery.jpg',
+        #     'generator.jpg': 'https://example.com/generator.jpg'
+        # }
 
         # Создаем пустые изображения для тестирования
-        for image_name in test_images.keys():
-            image_path = os.path.join(settings.MEDIA_ROOT, 'картинки', image_name)
-            if not os.path.exists(image_path):
-                with open(image_path, 'w') as f:
-                    f.write('')
+        # for image_name in test_images.keys():
+        #     image_path = os.path.join(settings.MEDIA_ROOT, 'картинки', image_name)
+        #     if not os.path.exists(image_path):
+        #         with open(image_path, 'w') as f:
+        #             f.write('')
 
         # Создаем товары
         for product_data in products:

@@ -3,25 +3,50 @@ import django
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'carstore.settings')
 django.setup()
 
-import shutil
 from store.models import Product
 from django.conf import settings
 
 src_dir = os.path.join(settings.BASE_DIR, 'картинки')
-dst_dir = os.path.join(settings.BASE_DIR, 'media', 'products')
-os.makedirs(dst_dir, exist_ok=True)
 
-image_files = [f for f in os.listdir(src_dir) if os.path.isfile(os.path.join(src_dir, f))]
-image_files.sort()
+# Ключевые слова для сопоставления
+KEYWORDS = {
+    'аккумулятор': 'аккумулятор.webp',
+    'генератор': 'генератор.webp',
+    'амортизатор': 'амартизаторы.webp',
+    'пружина': 'пружина подвески.webp',
+    'масляный': 'масляной фильтр.webp',
+    'тормозной диск': 'тормрзные диски .webp',
+    'тормоз': 'тормозные коллодки.webp',
+    'диск': 'тормрзные диски .webp',
+    'фара': 'фары.webp',
+    'бампер': 'бампер.webp',
+}
 
-for product, image_file in zip(Product.objects.all(), image_files):
-    ext = os.path.splitext(image_file)[1].lower()
-    new_filename = f"{product.slug}{ext}"
-    src_path = os.path.join(src_dir, image_file)
-    dst_path = os.path.join(dst_dir, new_filename)
-    shutil.copyfile(src_path, dst_path)
-    product.image = f"products/{new_filename}"
-    product.save()
-    print(f"{product.name}: {image_file} -> {new_filename}")
+for product in Product.objects.all():
+    found = False
+    # 1. Поиск по слагу
+    for ext in ['webp', 'jpg', 'jpeg', 'jfif', 'png']:
+        filename = f"{product.slug}.{ext}"
+        filepath = os.path.join(src_dir, filename)
+        if os.path.exists(filepath):
+            product.image = filename
+            product.save()
+            print(f"{product.name}: {filename} -> OK (slug)")
+            found = True
+            break
+    if found:
+        continue
+    # 2. Поиск по ключевым словам в названии
+    for key, fname in KEYWORDS.items():
+        if key in product.name.lower():
+            filepath = os.path.join(src_dir, fname)
+            if os.path.exists(filepath):
+                product.image = fname
+                product.save()
+                print(f"{product.name}: {fname} -> OK (keyword)")
+                found = True
+                break
+    if not found:
+        print(f"{product.name}: файл не найден для слага {product.slug} и ключевых слов")
 
-print("Готово! Картинки сопоставлены и переименованы.") 
+print("Готово! Все товары обновлены.") 

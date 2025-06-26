@@ -60,78 +60,132 @@ def product_detail(request, product_id, product_slug=None):
         'related_products': related_products
     })
 
-@login_required
 def cart(request):
-    cart, created = Cart.objects.get_or_create(user=request.user)
-    return render(request, 'store/cart.html', {'cart': cart})
+    if request.user.is_authenticated:
+        cart, created = Cart.objects.get_or_create(user=request.user)
+        items = cart.items.all()
+        total_price = sum(item.total_price for item in items)
+    else:
+        cart_data = request.session.get('cart', {})
+        items = []
+        total_price = 0
+        for product_id, quantity in cart_data.items():
+            product = Product.objects.filter(id=product_id).first()
+            if product:
+                item = type('CartItem', (), {})()
+                item.product = product
+                item.quantity = quantity
+                item.total_price = product.price * quantity
+                items.append(item)
+                total_price += item.total_price
+    return render(request, 'store/cart.html', {'cart': {'items': items, 'total_price': total_price}})
 
-@login_required
 def add_to_cart(request, product_id):
     product = get_object_or_404(Product, id=product_id)
-    cart, created = Cart.objects.get_or_create(user=request.user)
-    
-    cart_item, created = CartItem.objects.get_or_create(
-        cart=cart,
-        product=product,
-        defaults={'quantity': 1}
-    )
-    
-    if not created:
-        cart_item.quantity += 1
-        cart_item.save()
-    
-    messages.success(request, f'Товар {product.name} добавлен в корзину')
-    return redirect('cart')
-
-@login_required
-def remove_from_cart(request, item_id):
-    cart_item = get_object_or_404(CartItem, id=item_id, cart__user=request.user)
-    cart_item.delete()
-    messages.success(request, 'Товар удален из корзины')
-    return redirect('cart')
-
-@login_required
-def update_cart(request, item_id):
-    cart_item = get_object_or_404(CartItem, id=item_id, cart__user=request.user)
     quantity = int(request.POST.get('quantity', 1))
-    
-    if quantity > 0:
-        cart_item.quantity = quantity
+
+    if request.user.is_authenticated:
+        cart, created = Cart.objects.get_or_create(user=request.user)
+        cart_item, created = CartItem.objects.get_or_create(cart=cart, product=product)
+        if not created:
+            cart_item.quantity += quantity
+        else:
+            cart_item.quantity = quantity
         cart_item.save()
     else:
-        cart_item.delete()
-    
-    return redirect('cart')
+        cart = request.session.get('cart', {})
+        cart[str(product_id)] = cart.get(str(product_id), 0) + quantity
+        request.session['cart'] = cart
 
-@login_required
+    messages.success(request, f'Товар {product.name} добавлен в корзину')
+    return redirect('store:cart')
+
+def remove_from_cart(request, item_id):
+    if request.user.is_authenticated:
+        cart_item = get_object_or_404(CartItem, id=item_id, cart__user=request.user)
+        cart_item.delete()
+        messages.success(request, 'Товар удален из корзины')
+    else:
+        cart = request.session.get('cart', {})
+        if str(item_id) in cart:
+            del cart[str(item_id)]
+            request.session['cart'] = cart
+            messages.success(request, 'Товар удален из корзины')
+    return redirect('store:cart')
+
+def update_cart(request, item_id):
+    quantity = int(request.POST.get('quantity', 1))
+    if request.user.is_authenticated:
+        cart_item = get_object_or_404(CartItem, id=item_id, cart__user=request.user)
+        if quantity > 0:
+            cart_item.quantity = quantity
+            cart_item.save()
+        else:
+            cart_item.delete()
+    else:
+        cart = request.session.get('cart', {})
+        if str(item_id) in cart:
+            if quantity > 0:
+                cart[str(item_id)] = quantity
+            else:
+                del cart[str(item_id)]
+            request.session['cart'] = cart
+    return redirect('store:cart')
+
 def checkout(request):
-    cart = get_object_or_404(Cart, user=request.user)
-    
+    if request.user.is_authenticated:
+        cart = get_object_or_404(Cart, user=request.user)
+    else:
+        cart_data = request.session.get('cart', {})
+        items = []
+        total_price = 0
+        for product_id, quantity in cart_data.items():
+            product = Product.objects.filter(id=product_id).first()
+            if product:
+                item = type('CartItem', (), {})()
+                item.product = product
+                item.quantity = quantity
+                item.total_price = product.price * quantity
+                items.append(item)
+                total_price += item.total_price
+        cart = type('Cart', (), {})()
+        cart.items = items
+        cart.total_price = total_price
+
     if request.method == 'POST':
         form = OrderForm(request.POST)
         if form.is_valid():
             order = form.save(commit=False)
-            order.user = request.user
+            if request.user.is_authenticated:
+                order.user = request.user
             order.total_price = cart.total_price
             order.save()
-            
-            for item in cart.items.all():
-                OrderItem.objects.create(
-                    order=order,
-                    product=item.product,
-                    quantity=item.quantity,
-                    price=item.product.price
-                )
-            
-            cart.delete()
+            if request.user.is_authenticated:
+                for item in cart.items.all():
+                    OrderItem.objects.create(
+                        order=order,
+                        product=item.product,
+                        quantity=item.quantity,
+                        price=item.product.price
+                    )
+                cart.delete()
+            else:
+                for item in cart.items:
+                    OrderItem.objects.create(
+                        order=order,
+                        product=item.product,
+                        quantity=item.quantity,
+                        price=item.product.price
+                    )
+                request.session['cart'] = {}
             messages.success(request, 'Заказ успешно оформлен!')
-            return redirect('profile')
+            return redirect('profile' if request.user.is_authenticated else 'store:home')
     else:
         form = OrderForm(initial={
-            'shipping_address': request.user.profile.address if hasattr(request.user, 'profile') else '',
-            'phone': request.user.profile.phone if hasattr(request.user, 'profile') else ''
+            'shipping_address': request.user.profile.address if request.user.is_authenticated and hasattr(request.user, 'profile') else '',
+            'phone': request.user.profile.phone if request.user.is_authenticated and hasattr(request.user, 'profile') else ''
         })
-    
+
     return render(request, 'store/checkout.html', {
         'cart': cart,
         'form': form
