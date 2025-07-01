@@ -1,9 +1,13 @@
-from PIL import Image, ImageDraw, ImageFont
 import os
+import django
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'carstore.settings')
+django.setup()
+
+from PIL import Image, ImageDraw, ImageFont
 from store.models import Product
 from django.conf import settings
 
-MEDIA_PATH = os.path.join(settings.BASE_DIR, 'media', 'products')
+MEDIA_PATH = os.path.join(settings.MEDIA_ROOT, 'products')
 
 def create_part_image(filename, text, color):
     # Создаем изображение
@@ -26,8 +30,8 @@ def create_part_image(filename, text, color):
     draw.text(text_position, text, fill='black', font=font)
     
     # Сохраняем изображение
-    os.makedirs('картинки', exist_ok=True)
-    img.save(os.path.join('картинки', filename))
+    os.makedirs(MEDIA_PATH, exist_ok=True)
+    img.save(os.path.join(MEDIA_PATH, filename))
 
 # Создаем изображения для каждой запчасти
 parts = [
@@ -37,7 +41,7 @@ parts = [
     ('brake_pads.jpg', 'Тормозной диск', '#FFF0F5'),
     ('shock_absorber.jpg', 'Амортизатор', '#F5F5DC'),
     ('spring.jpg', 'Пружина подвески', '#F0F8FF'),
-    ('bumper.jpg', 'Бампер', '#FFFAFA'),
+    ('bumper1.webp', 'Бампер', '#FFFAFA'),
     ('headlight.jpg', 'Фара', '#F8F8FF'),
     ('battery.jpg', 'Аккумулятор', '#F5F5F5'),
     ('generator.jpg', 'Генератор', '#FAFAD2'),
@@ -50,11 +54,11 @@ for filename, text, color in parts:
 count = 0
 for product in Product.objects.all():
     slug = product.slug
-    for ext in ['jpg', 'jpeg', 'png']:
+    for ext in ['jpg', 'jpeg', 'png', 'webp']:
         filename = f"{slug}.{ext}"
         filepath = os.path.join(MEDIA_PATH, filename)
         if os.path.exists(filepath):
-            product.image = f"products/{filename}"
+            product.image = filename  # Django сам добавит 'products/'
             product.save()
             print(f"Картинка для {product.name} установлена: {filename}")
             count += 1

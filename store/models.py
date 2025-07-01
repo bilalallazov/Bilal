@@ -6,7 +6,7 @@ from django.utils.text import slugify
 class Category(models.Model):
     name = models.CharField(max_length=200, db_index=True)
     slug = models.SlugField(max_length=200, unique=True)
-    image = models.ImageField(upload_to='картинки', blank=True, null=True)
+    image = models.ImageField(upload_to='categories', blank=True, null=True)
 
     class Meta:
         ordering = ('name',)
@@ -23,7 +23,7 @@ class Product(models.Model):
     category = models.ForeignKey(Category, related_name='products', on_delete=models.CASCADE)
     name = models.CharField(max_length=200, db_index=True)
     slug = models.SlugField(max_length=200, db_index=True, unique=True, blank=True, null=True)
-    image = models.ImageField(upload_to='картинки', blank=True)
+    image = models.ImageField(upload_to='products', blank=True)
     description = models.TextField(blank=True)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     stock = models.PositiveIntegerField()

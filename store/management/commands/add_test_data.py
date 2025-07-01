@@ -77,7 +77,7 @@ class Command(BaseCommand):
                 'description': 'Передний бампер из ударопрочного пластика',
                 'price': 12000,
                 'stock': 10,
-                'image': 'картинки/bumper.jpg'
+                'image': 'картинки/bumper1.webp'
             },
             {
                 'category': categories['body'],
@@ -113,7 +113,7 @@ class Command(BaseCommand):
             'brake_disc.jpg': 'https://example.com/brake_disc.jpg',
             'shock_absorber.jpg': 'https://example.com/shock_absorber.jpg',
             'spring.jpg': 'https://example.com/spring.jpg',
-            'bumper.jpg': 'https://example.com/bumper.jpg',
+            'bumper1.webp': 'https://example.com/bumper1.webp',
             'headlight.jpg': 'https://example.com/headlight.jpg',
             'battery.jpg': 'https://example.com/battery.jpg',
             'generator.jpg': 'https://example.com/generator.jpg'
